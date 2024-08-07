@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-dp
+  labels:
+    estado: "1"
+spec:
+  selector:   #permite seleccionar un conjunto de objetos que cumplan las condicione
+    matchLabels:
+      app: db
+  replicas: 4 # indica al controlador que ejecute 2 pods
+  template:   # Plantilla que define los containers
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+      - name: mysql-ait
+        image: mysql:5.7
+        env:
+          - name : MYSQL_HOST
+            value : localhost
+          - name: MYSQL_DATABASE
+            value: ait_prueba_tecnica
+          - name: MYSQL_USER 
+            value: facu
+          - name : MYSQL_PASSWORD
+            value: Facu1234@
+          - name : MYSQL_ROOT_PASSWORD
+            value:  Facu1234@
+        ports:
+        - containerPort: 3306
