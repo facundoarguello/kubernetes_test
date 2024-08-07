@@ -58,9 +58,9 @@ kubectl create namespace mi-proyecto
 
 
 ### 4. Exponer el Servicio
-Para poder testear y probar la api
+Para poder testear y probar la api. ait-svc es el nombre del servicio expuesto para el pod de la api
 
 ```sh
-minikube service myservice --namespace=mi-proyecto
+minikube service ait-svc --namespace=mi-proyecto
 ```
 
