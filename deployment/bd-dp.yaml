@@ -14,6 +14,10 @@ spec:
       labels:
         app: db
     spec:
+      volumes:
+      - name: be-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
       containers:
       - name: mysql-ait
         image: mysql:5.7
@@ -30,3 +34,6 @@ spec:
             value:  Facu1234@
         ports:
         - containerPort: 3306
+        volumeMounts:
+        - name: be-storage
+          mountPath: /var/lib/mysql
