@@ -5,28 +5,40 @@ metadata:
   labels:
     estado: "1"
 spec:
-  selector:   #permite seleccionar un conjunto de objetos que cumplan las condicione
+  selector: #permite seleccionar un conjunto de objetos que cumplan las condicione
     matchLabels:
       app: api-be
   replicas: 4 # indica al controlador que ejecute 2 pods
-  template:   # Plantilla que define los containers
+  template: # Plantilla que define los containers
     metadata:
       labels:
         app: api-be
     spec:
       containers:
-      - name: api-django
-        image: farguello1995/ait_prueba_kubernetes
-        env:
-          - name: HOST_DB
-            value: "db-service"
-          - name: PORT_DB
-            value: "3306"
-          - name: USER_DB
-            value: 'facu'
-          - name: PASSWORD_DB
-            value: 'Facu1234@'
-          - name: NAME_DB
-            value: 'ait_prueba_tecnica'
-        ports:
-        - containerPort: 9000
+        - name: api-django
+          image: farguello1995/ait_prueba_kubernetes
+          env:
+            - name: HOST_DB
+              value: "db-service"
+            - name: PORT_DB
+              valueFrom:
+                secretKeyRef:
+                  name: my-secret
+                  key: portdb
+            - name: USER_DB
+              valueFrom:
+                secretKeyRef:
+                  name: my-secret
+                  key: username
+            - name: PASSWORD_DB
+              valueFrom:
+                secretKeyRef:
+                  name: my-secret
+                  key: password
+            - name: NAME_DB
+              valueFrom:
+                secretKeyRef:
+                  name: my-secret
+                  key: namedb
+          ports:
+            - containerPort: 9000

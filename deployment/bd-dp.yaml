@@ -5,35 +5,47 @@ metadata:
   labels:
     estado: "1"
 spec:
-  selector:   #permite seleccionar un conjunto de objetos que cumplan las condicione
+  selector: #permite seleccionar un conjunto de objetos que cumplan las condicione
     matchLabels:
       app: db
   replicas: 4 # indica al controlador que ejecute 2 pods
-  template:   # Plantilla que define los containers
+  template: # Plantilla que define los containers
     metadata:
       labels:
         app: db
     spec:
       volumes:
-      - name: be-storage
-        persistentVolumeClaim:
-          claimName: mysql-pv-claim
-      containers:
-      - name: mysql-ait
-        image: mysql:5.7
-        env:
-          - name : MYSQL_HOST
-            value : localhost
-          - name: MYSQL_DATABASE
-            value: ait_prueba_tecnica
-          - name: MYSQL_USER 
-            value: facu
-          - name : MYSQL_PASSWORD
-            value: Facu1234@
-          - name : MYSQL_ROOT_PASSWORD
-            value:  Facu1234@
-        ports:
-        - containerPort: 3306
-        volumeMounts:
         - name: be-storage
-          mountPath: /var/lib/mysql
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+      containers:
+        - name: mysql-ait
+          image: mysql:5.7
+          env:
+            - name: MYSQL_HOST
+              value: localhost
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: my-secret
+                  key: namedb
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: my-secret
+                  key: username
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: my-secret
+                  key: password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: my-secret
+                  key: password
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: be-storage
+              mountPath: /var/lib/mysql
